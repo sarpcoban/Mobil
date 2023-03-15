@@ -34,11 +34,10 @@ class _MyHomePageState extends State<MyHomePage> {
   // TODO: String türünde bir liste oluşturunuz.
   
 
-  // TODO: Oluşturduğunuz listeye metot içinde değer atayınız. Metot String türünde parametresi almalıdır. Listeye eleman eklenecektir.
+  // TODO: Oluşturduğunuz listeye metot içinde değer atayınız. Metot String türünde parametresi almalıdır. Eleman eklenecektir.
   
- // TODO: Oluşturduğunuz listeye metot içinde değer atayınız. Metot String türünde parametresi almalıdır. Listeden eleman çıkarılacaktır.
+// TODO: Oluşturduğunuz listeye metot içinde değer atayınız. Metot String türünde parametresi almalıdır. Eleman çıkarılacaktır.
   
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     itemBuilder: (BuildContext, index) => ListTile(
                       title: Text(
                         // TODO: Oluşturulan liste içindeki elemanı ekrana bastırın.
-                          
+                          ),
                     )),
               )),
           Container(
@@ -69,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ElevatedButton(
             child: Text("Add"),
             onPressed: () => setState(() {
-              // TODO: Oluşturduğunuz metota TextField içindeki değeri gönderin.
+              // TODO: Oluşturduğunuz metota TextField içindeki değeri ekleyin.
               
             }),
           ),
