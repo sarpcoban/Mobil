@@ -35,7 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // TODO: Boş olamaz String, Boş olabilir String türünde bir Map oluşturunuz.
   // Cevap:
-  Map<String, String?> gradeData = {};
+  
 
   /* TODO: Girilen sayılara göre harf notu hesaplayan bir metot yazınız.
   *   AA: >=85
@@ -47,20 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // Cevap:
 
 
-  String GradeCalc(int midterm, int fnal) {
-    double grade = 0.4*midterm+0.6*fnal;
-    if (grade >= 85) {
-      return "AA";
-    } else if (grade >= 70) {
-      return "BB";
-    } else if (grade >= 60) {
-      return "CC";
-    } else if (grade >= 50) {
-      return "DD";
-    } else {
-      return "FF";
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -81,13 +68,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       title: Text(
                         // TODO: Oluşturduğunuz Map içindeki isimleri ekranda gösteriniz.
                         // Cevap:
-                          "${gradeData.keys.elementAt(index)}"),
+                          ),
                       leading: Text(
                         // TODO: Oluşturduğunuz Map içindeki Harf Notlarını ekranda gösteriniz.
                         // Eğer veri boş ise "Veri Girilmedi" yazmalıdır.
                         // Cevap:
-                          gradeData.values.elementAt(index) ??
-                              "Veri Girilmedi"),
+                          ),
                     ))),
           ),
           Column(
@@ -146,11 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   *   TODO: Hesaplanan harf notunu oluşturduğunuz Map içine kaydedin.
                   * */
                   // Cevap:
-                  gradeData[_nameController.text] =
-                      GradeCalc(int.parse(_gradeController.text), int.parse(_grade1Controller.text));
-                  _nameController.clear();
-                  _gradeController.clear();
-                  _grade1Controller.clear();
+                  
                 }),
               )),
         ]));
