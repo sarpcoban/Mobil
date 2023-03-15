@@ -1,0 +1,158 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _gradeController = TextEditingController();
+  final TextEditingController _grade1Controller = TextEditingController();
+
+  // TODO: Boş olamaz String, Boş olabilir String türünde bir Map oluşturunuz.
+  // Cevap:
+  Map<String, String?> gradeData = {};
+
+  /* TODO: Girilen sayılara göre harf notu hesaplayan bir metot yazınız.
+  *   AA: >=85
+  *   BB: >=70
+  *   CC: >=60
+  *   DD: >=50
+  *   FF: <50
+  * */
+  // Cevap:
+
+
+  String GradeCalc(int midterm, int fnal) {
+    double grade = 0.4*midterm+0.6*fnal;
+    if (grade >= 85) {
+      return "AA";
+    } else if (grade >= 70) {
+      return "BB";
+    } else if (grade >= 60) {
+      return "CC";
+    } else if (grade >= 50) {
+      return "DD";
+    } else {
+      return "FF";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Student Grades App'),
+        ),
+        body: Column(children: [
+          Expanded(
+            child: ListView.builder(
+                shrinkWrap: true,
+                // TODO: itemCount değişkenine oluşturduğunuz Map uzunluğunu veriniz.
+                // Cevap:
+                itemCount: gradeData.length,
+                itemBuilder: (context, index) => Card(
+                    margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    child: ListTile(
+                      title: Text(
+                        // TODO: Oluşturduğunuz Map içindeki isimleri ekranda gösteriniz.
+                        // Cevap:
+                          "${gradeData.keys.elementAt(index)}"),
+                      leading: Text(
+                        // TODO: Oluşturduğunuz Map içindeki Harf Notlarını ekranda gösteriniz.
+                        // Eğer veri boş ise "Veri Girilmedi" yazmalıdır.
+                        // Cevap:
+                          gradeData.values.elementAt(index) ??
+                              "Veri Girilmedi"),
+                    ))),
+          ),
+          Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(children: [
+                  Flexible(
+                      child: Container(
+                          margin: const EdgeInsets.fromLTRB(10, 0, 10, 5),
+                          alignment: Alignment.center,
+                          child: TextField(
+                              controller: _nameController,
+                              decoration: const InputDecoration(
+                                labelText: "Enter Name",
+                                border: OutlineInputBorder(),
+                              )))),
+                  Flexible(
+                      child: Container(
+                          margin: const EdgeInsets.fromLTRB(10, 0, 10, 5),
+                          alignment: Alignment.center,
+                          child: TextField(
+                              controller: _gradeController,
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                labelText: "Enter Mid term",
+                                border: OutlineInputBorder(),
+                              )))),
+                  Flexible(
+                      child: Container(
+                          margin: const EdgeInsets.fromLTRB(10, 0, 10, 5),
+                          alignment: Alignment.center,
+                          child: TextField(
+                              controller: _grade1Controller,
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                labelText: "Enter Final",
+                                border: OutlineInputBorder(),
+                              ))))
+                ])
+              ]),
+          Container(
+              margin: const EdgeInsets.fromLTRB(10, 0, 10, 5),
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.add),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(45)),
+                label: const Text(
+                  "Add Student",
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                onPressed: () => setState(() {
+                  /*  TODO: Oluşturduğunuz metota _gradeController ve _grade1controller içindeki değeri gönderiniz.
+                  *   TODO: Hesaplanan harf notunu oluşturduğunuz Map içine kaydedin.
+                  * */
+                  // Cevap:
+                  gradeData[_nameController.text] =
+                      GradeCalc(int.parse(_gradeController.text), int.parse(_grade1Controller.text));
+                  _nameController.clear();
+                  _gradeController.clear();
+                  _grade1Controller.clear();
+                }),
+              )),
+        ]));
+  }
+}
