@@ -1,0 +1,199 @@
+import 'package:flutter/material.dart';
+// TODO hive ve hive_flutter paketlerini yükleyiniz
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  //TODO Hive ile flutter bağlantısını gerçekleştiriniz
+  await Hive.openBox('shopping_box');
+
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Hive Veritabanı',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<Map<String, dynamic>> _items = [];
+
+  final _shoppingBox = Hive.box('shopping_box');
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshItems();
+  }
+
+  void _refreshItems() {
+    final data = _shoppingBox.keys.map((key) {
+      final value = _shoppingBox.get(key);
+      return {"key": key, "name": value["name"], "quantity": value['quantity']};
+    }).toList();
+
+    setState(() {
+      // TODO elemanları ters sırayla getirmesini sağlayın
+    });
+  }
+
+
+  Future<void> _createItem(Map<String, dynamic> newItem) async {
+    // TODO eleman ekleme işlemini gerçekleştiriniz
+  }
+
+
+
+  Future<void> _updateItem(int itemKey, Map<String, dynamic> item) async {
+    // TODO eleman güncelleme işlemini gerçekleştiriniz
+  }
+
+
+  Future<void> _deleteItem(int itemKey) async {
+    // TODO eleman silme işlemini gerçekleştiriniz
+  }
+
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _quantityController = TextEditingController();
+
+
+  void _showForm(BuildContext ctx, int? itemKey) async {
+
+
+    if (itemKey != null) {
+      final existingItem =
+      _items.firstWhere((element) => element['key'] == itemKey);
+      _nameController.text = existingItem['name'];
+      _quantityController.text = existingItem['quantity'];
+    }
+
+    showModalBottomSheet(
+        context: ctx,
+        elevation: 5,
+        isScrollControlled: true,
+        builder: (_) => Container(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(ctx).viewInsets.bottom,
+              top: 15,
+              left: 15,
+              right: 15),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(hintText: 'Name'),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextField(
+                controller: _quantityController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(hintText: 'Quantity'),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                onPressed: () async {
+
+                  if (itemKey == null) {
+                    _createItem({
+                      // TODO gerekli değerlere controller atayınız
+                    });
+                  }
+
+
+                  if (itemKey != null) {
+                    _updateItem(itemKey, {
+                      // TODO gerekli değerlere controller atayınız
+                    });
+                  }
+
+                  // Clear the text fields
+                  _nameController.text = '';
+                  _quantityController.text = '';
+
+                  Navigator.of(context).pop(); // Close the bottom sheet
+                },
+                child: Text(itemKey == null ? 'Create New' : 'Update'),
+              ),
+              const SizedBox(
+                height: 15,
+              )
+            ],
+          ),
+        ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Hive Application'),
+      ),
+      body: _items.isEmpty
+          ? const Center(
+        child: Text(
+          'No Data',
+          style: TextStyle(fontSize: 30),
+        ),
+      )
+          : ListView.builder(
+
+          itemCount: _items.length,
+          itemBuilder: (_, index) {
+            final currentItem = // TODO elemanları atayınız
+            return Card(
+              color: Colors.blue,
+              margin: const EdgeInsets.all(10),
+              elevation: 3,
+              child: ListTile(
+                  title: Text(//TODO Ürünlerin isimlerini atayınız),
+                  subtitle: Text(//TODO Ürünlerin miktarını atayınız),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+
+                      IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () =>
+                              //TODO seçili ürünü ggöstermesiini sağlayın),
+
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        // TODO seçili ürünü silmesini sağlayın),
+                      ),
+                    ],
+                  )),
+            );
+          }),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showForm(context, null),
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
