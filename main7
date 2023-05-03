@@ -1,0 +1,162 @@
+import 'package:flutter/material.dart';
+// TODO firebase_core ve cloud_firestore paketlerini ekleyiniz.
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //TODO Firebase bağlantısını gerçekleştiriniz.
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Firebase',
+      home: HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+
+  //TODO products tablosundaki verileri bir değişkene atayınız
+
+  Future<void> _createOrUpdate([DocumentSnapshot? documentSnapshot]) async {
+    String action = 'create';
+    if (documentSnapshot != null) {
+      action = 'update';
+      _nameController.text = documentSnapshot['name'];
+      _priceController.text = documentSnapshot['price'].toString();
+    }
+
+    await showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext ctx) {
+          return Padding(
+            padding: EdgeInsets.only(
+                top: 20,
+                left: 20,
+                right: 20,
+                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(labelText: 'Name'),
+                ),
+                TextField(
+                  keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+                  controller: _priceController,
+                  decoration: const InputDecoration(
+                    labelText: 'Price',
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  child: Text(action == 'create' ? 'Create' : 'Update'),
+                  onPressed: () async {
+                    final String? name = _nameController.text;
+                    final double? price =
+                    double.tryParse(_priceController.text);
+                    if (name != null && price != null) {
+                      if (action == 'create') {
+                        //TODO ekleme işlemini gerçekleştiriniz.
+                      }
+
+                      if (action == 'update') {
+                        //TODO güncelleme işlemini gerçekleştiriniz
+                      }
+
+                      _nameController.text = '';
+                      _priceController.text = '';
+
+                      Navigator.of(context).pop();
+                    }
+                  },
+                )
+              ],
+            ),
+          );
+        });
+  }
+
+
+  Future<void> _deleteProduct(String productId) async {
+    //TODO silme işlemini gerçekleştiriniz.
+
+
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('You have successfully deleted a product')));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Firebase'),
+      ),
+
+      body: StreamBuilder(
+        stream: // TODO stream edilecek diziyi ekleyiniz,
+        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+          if (streamSnapshot.hasData) {
+            return ListView.builder(
+              itemCount: //TODO eleman uzunluğunu ekleyiniz.,
+              itemBuilder: (context, index) {
+                final DocumentSnapshot documentSnapshot =
+                streamSnapshot.data!.docs[index];
+                return Card(
+                  margin: const EdgeInsets.all(10),
+                  child: ListTile(
+                    title: Text(//TODO name değerini ekleyiniz),
+                    subtitle: Text(//TODO price değerini ekleyiniz),
+                    trailing: SizedBox(
+                      width: 100,
+                      child: Row(
+                        children: [
+                          IconButton(
+                              icon: const Icon(Icons.edit),
+                              //TODO güncelleme fonksiyonunu ekleyiniz.),
+                          IconButton(
+                              icon: const Icon(Icons.delete),
+                              // TODO silme fonksiyonunu ekleyiniz.),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        // TODO ekleme fonksiyonunu ekleyiniz.)
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
