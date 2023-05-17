@@ -1,0 +1,155 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart' as path;
+import 'package:image_picker/image_picker.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // TODO Firebase bağlantısını yapınız
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+
+      debugShowCheckedModeBanner: false,
+      title: 'Firebase Foto',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  // TODO Firebase storage değişkenini oluşturunuz.
+
+
+  Future<void> _upload(String inputSource) async {
+    // TODO Image picker fonksiyonunu kullanınız.
+    XFile? pickedImage;
+    try {
+     // TODO girdi kameraysa kamerayı açan değilse galeriyi açan kodu yazınız.
+
+      final String fileName = path.basename(pickedImage!.path);
+      File imageFile = File(pickedImage.path);
+
+      try {
+        //TODO resim ekleyiniz ve uploaded_by ve description metadatalarını kullanınız.
+
+
+        setState(() {});
+      } on FirebaseException catch (error) {
+        if (kDebugMode) {
+          print(error);
+        }
+      }
+    } catch (err) {
+      if (kDebugMode) {
+        print(err);
+      }
+    }
+  }
+
+
+  Future<List<Map<String, dynamic>>> _loadImages() async {
+    List<Map<String, dynamic>> files = [];
+
+    // TODO depodaki resimleri tutan bir ListResult değişkeni oluşturunuz.
+    final List<Reference> allFiles = result.items;
+
+    await Future.forEach<Reference>(allFiles, (file) async {
+      // TODO resimleri metadataları ile birlikte getiren kodu yazınız.
+    });
+
+    return files;
+  }
+
+
+  Future<void> _delete(String ref) async {
+    // TODO resmi silen kodu yazınız.
+
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Firebase Foto'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton.icon(
+                    // TODO kameraya yönlendiren kodu yazınız.
+                    icon: const Icon(Icons.camera),
+                    label: const Text('camera')),
+                ElevatedButton.icon(
+                    // TODO galeriye yönlendiren kodu yazınız.
+                    icon: const Icon(Icons.library_add),
+                    label: const Text('Gallery')),
+              ],
+            ),
+            Expanded(
+              child: FutureBuilder(
+                future: _loadImages(),
+                builder: (context,
+                    AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return ListView.builder(
+                      itemCount: snapshot.data?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        final Map<String, dynamic> image =
+                        snapshot.data![index];
+
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          child: ListTile(
+                            dense: false,
+                            leading: Image.network(image['url']),
+                            title: Text(image['uploaded_by']),
+                            subtitle: Text(image['description']),
+                            trailing: IconButton(
+                              onPressed: () => _delete(image['path']),
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
